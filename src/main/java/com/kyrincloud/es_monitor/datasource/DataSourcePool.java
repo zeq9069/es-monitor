@@ -68,4 +68,9 @@ public final class DataSourcePool {
 			pools.add(con);
 		}
 	}
+	
+	protected int size() {
+		return pools.size();
+	}
+	
 }

@@ -9,18 +9,30 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.kyrincloud.es_monitor.queue.DataCache;
 
 public final class DatabaseMonitor {
-
+	
+	private static Logger logger=LoggerFactory.getLogger(DatabaseMonitor.class);
 	private String table_name;
 	private String table_key;
 	private String sql;
+	private long delay;
+	private long period;
+	private int pageSize=100;
 
-	public DatabaseMonitor(String table_name, String table_key) {
+	public DatabaseMonitor(String table_name, String table_key,long delay,long period) {
 		this.table_name = table_name;
 		this.table_key = table_key;
-
+		this.delay=delay;
+		this.period=period;
+	}
+	
+	public DatabaseMonitor(String table_name, String table_key) {
+		this(table_name,table_key,1000,1000*30);
 	}
 
 	private List<String> executor(int pageIndex, int pageSize) {
@@ -41,8 +53,10 @@ public final class DatabaseMonitor {
 			stmt.close();
 			res.close();
 		} catch (SQLException e) {
+			logger.error("查询数据库时，出现异常：{}",e.getMessage());
 			e.printStackTrace();
 		} finally {
+			logger.info("结束查询，关闭数据库连接");
 			DataSourcePool.getInstance().release(con);
 		}
 		return list;
@@ -73,8 +87,8 @@ public final class DatabaseMonitor {
 		task.schedule(new TimerTask() {
 			@Override
 			public void run() {
+				logger.info("[数据库查询任务启动]");
 				int pageIndex = 0;
-				int pageSize = 100;
 				long total = count();
 				int allPage = (int) ((total + pageSize - 1) / pageSize);
 				for (; allPage > 0; allPage--) {
@@ -83,7 +97,8 @@ public final class DatabaseMonitor {
 						DataCache.add(str);
 					}
 				}
+				logger.info("[数据库查询任务结束，共查询：{}条,连接池数量：{}]",total,DataSourcePool.getInstance().size());
 			}
-		}, 1000 * 10);
+		}, delay,period );
 	}
 }
