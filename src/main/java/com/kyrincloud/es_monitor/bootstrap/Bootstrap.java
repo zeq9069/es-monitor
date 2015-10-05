@@ -17,9 +17,9 @@ public class Bootstrap {
 	
 	private static Logger logger=LoggerFactory.getLogger(Bootstrap.class);
 
-	private static String table_name = PropertyConfigFactory.getInstance().getProperties().getProperty("pg.table");
-	private static String table_key = PropertyConfigFactory.getInstance().getProperties().getProperty("pg.table.key");
-
+	private static String table_name=PropertyConfigFactory.getInstance().getProperties().getProperty("pg.table");
+	private static String table_key=PropertyConfigFactory.getInstance().getProperties().getProperty("pg.table.key");
+	
 	public static void main(String[] args) {
 		logger.info("服务启动……");
 		DatabaseMonitor databaseMonitor = new DatabaseMonitor(table_name, table_key);

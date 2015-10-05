@@ -22,7 +22,7 @@ public final class DatabaseMonitor {
 	private String sql;
 	private long delay;
 	private long period;
-	private int pageSize=100;
+	private int pageSize=1;
 
 	public DatabaseMonitor(String table_name, String table_key,long delay,long period) {
 		this.table_name = table_name;
@@ -56,7 +56,7 @@ public final class DatabaseMonitor {
 			logger.error("查询数据库时，出现异常：{}",e.getMessage());
 			e.printStackTrace();
 		} finally {
-			logger.info("结束查询，关闭数据库连接");
+			logger.info("结束查询，释放数据库连接");
 			DataSourcePool.getInstance().release(con);
 		}
 		return list;
@@ -92,7 +92,7 @@ public final class DatabaseMonitor {
 				long total = count();
 				int allPage = (int) ((total + pageSize - 1) / pageSize);
 				for (; allPage > 0; allPage--) {
-					List<String> list = executor(++pageIndex, 100);
+					List<String> list = executor(++pageIndex, pageSize);
 					for (String str : list) {
 						DataCache.add(str);
 					}

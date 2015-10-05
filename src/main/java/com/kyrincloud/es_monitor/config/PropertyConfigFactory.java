@@ -20,10 +20,11 @@ public class PropertyConfigFactory {
 		ClassLoader load = PropertyConfigFactory.class.getClassLoader();
 		InputStream config = load.getResourceAsStream(CONFIG);
 		try {
-			if (config != null)
+			if (config != null){
 				properties.load(config);
-			else
-				throw new IOException("找不到配置文件->config.properties");
+			}else{
+				throw new IOException("找不到配置文件:config.properties");
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

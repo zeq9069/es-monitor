@@ -6,11 +6,12 @@ import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.kyrincloud.es_monitor.config.PropertyConfigFactory;
+import com.kyrincloud.es_monitor.util.Util;
+
 public final class DataSourcePool {
 
-	private int max;
-
-	private int min;
+	private  int max;
 
 	private Queue<Connection> pools = new ArrayBlockingQueue<Connection>(5);
 
@@ -18,18 +19,16 @@ public final class DataSourcePool {
 
 	private AtomicInteger isUsed = new AtomicInteger(0);
 
-	public DataSourcePool(PgDataSource pds, int max, int min) {
-		this.pds = pds;
-		this.max = max;
-		this.min = min;
-	}
-
 	public DataSourcePool(PgDataSource pds) {
-		this(pds, 5, 0);
+		this.pds = pds;
+		String _max=PropertyConfigFactory.getInstance().getProperties().getProperty("pg.datasource.pools");
+		if(Util.validate("pg.datasource.pools", _max)){
+			this.max=Integer.parseInt(_max);
+		}
 	}
 
 	private static final class Instance {
-		private static final DataSourcePool p = new DataSourcePool(new PgDataSource(), 5, 1);
+		private static final DataSourcePool p = new DataSourcePool(new PgDataSource());
 	}
 
 	public static final DataSourcePool getInstance() {
