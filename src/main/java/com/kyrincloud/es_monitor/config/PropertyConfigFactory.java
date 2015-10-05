@@ -1,7 +1,9 @@
 package com.kyrincloud.es_monitor.config;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
 
 /**
@@ -14,11 +16,23 @@ public class PropertyConfigFactory {
 
 	private static Properties properties = new Properties();
 
-	private static final String CONFIG = "config.properties";
+	private static final String PATH = System.getProperty("config");
 
 	public PropertyConfigFactory() {
-		ClassLoader load = PropertyConfigFactory.class.getClassLoader();
-		InputStream config = load.getResourceAsStream(CONFIG);
+		System.out.println(System.getProperty("user.dir"));
+		
+		FileInputStream config=null;
+		try {
+			//如果是绝对路径
+			if (PATH.startsWith("/") || PATH.indexOf(":") > 0) {
+				config = new FileInputStream(new File(PATH));
+			}else{
+				config = new FileInputStream(new File(System.getProperty("user.dir")+"/"+PATH));
+			}
+			
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		}
 		try {
 			if (config != null){
 				properties.load(config);
