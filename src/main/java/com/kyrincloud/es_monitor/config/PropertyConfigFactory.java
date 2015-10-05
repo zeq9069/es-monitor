@@ -19,10 +19,11 @@ public class PropertyConfigFactory {
 	private static final String PATH = System.getProperty("config");
 
 	public PropertyConfigFactory() {
-		System.out.println(System.getProperty("user.dir"));
-		
 		FileInputStream config=null;
 		try {
+			if(PATH==null || PATH.isEmpty()){
+				throw new FileNotFoundException("缺少配置文件,请指定配置文件参数：-Dconfig=config.properties");
+			}
 			//如果是绝对路径
 			if (PATH.startsWith("/") || PATH.indexOf(":") > 0) {
 				config = new FileInputStream(new File(PATH));
