@@ -13,7 +13,7 @@ public final class DataSourcePool {
 
 	private  int max;
 
-	private Queue<Connection> pools = new ArrayBlockingQueue<Connection>(5);
+	private Queue<Connection> pools;
 
 	private PgDataSource pds;
 
@@ -25,6 +25,7 @@ public final class DataSourcePool {
 		if(Util.validate("pg.datasource.pools", _max)){
 			this.max=Integer.parseInt(_max);
 		}
+		 pools= new ArrayBlockingQueue<Connection>(max);
 	}
 
 	private static final class Instance {
