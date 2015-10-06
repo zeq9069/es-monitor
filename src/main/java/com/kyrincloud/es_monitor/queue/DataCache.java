@@ -3,8 +3,8 @@ package com.kyrincloud.es_monitor.queue;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 /**
  * 数据缓存队列
@@ -14,9 +14,28 @@ import java.util.concurrent.ArrayBlockingQueue;
  */
 public class DataCache {
 
-	private static Queue<String> data = new ArrayBlockingQueue<String>(1000);
+	private static BlockingQueue<String> data = new ArrayBlockingQueue<String>(1000);
 	private static List<String> notExist=new ArrayList<String>();//存放数据库中不存在es服务中的id
-
+	private boolean isExport=false;
+	
+	public static String take(){
+		String value=null;
+		try {
+			value= data.take();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		return value;
+	}
+	
+	public static void put(String e){
+		try {
+			data.put(e);
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
+	}
+	
 	public static String poll() {
 		return data.poll();
 	}
@@ -64,5 +83,11 @@ public class DataCache {
 	public static void nClear() {
 		notExist.clear();
 	}
-
+	
+	public   void setIsExport(boolean isExport){
+		this.isExport=isExport;
+	}
+	public  boolean isExport(){
+		return isExport;
+	}
 }

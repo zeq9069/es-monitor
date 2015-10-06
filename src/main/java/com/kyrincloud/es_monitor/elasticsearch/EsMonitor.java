@@ -11,7 +11,11 @@ import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.kyrincloud.es_monitor.config.PropertyConfigFactory;
+import ch.qos.logback.core.joran.conditional.ElseAction;
+
+import com.kyrincloud.es_monitor.Monitor;
+import com.kyrincloud.es_monitor.config.ElasticsearchConfig;
+import com.kyrincloud.es_monitor.config.PropertyConfigLoader;
 import com.kyrincloud.es_monitor.queue.DataCache;
 import com.kyrincloud.es_monitor.util.Util;
 
@@ -19,7 +23,7 @@ import com.kyrincloud.es_monitor.util.Util;
  * 
  * @author kyrin `@date 2015年9月30日
  */
-public final class EsMonitor {
+public final class EsMonitor implements Monitor{
 
 	private static Logger logger = LoggerFactory.getLogger(EsMonitor.class);
 
@@ -30,26 +34,26 @@ public final class EsMonitor {
 	private Client client;
 
 	@SuppressWarnings("resource")
-	public EsMonitor() {
-		String _host = PropertyConfigFactory.getInstance().getProperties()
+	public EsMonitor(ElasticsearchConfig config) {
+		String _host = PropertyConfigLoader.getInstance().getProperties()
 				.getProperty("elasticsearch.server");
 		if (Util.validate("elasticsearch.server", _host)) {
 			this.host=_host;
 		}
 
-		String _port = PropertyConfigFactory.getInstance().getProperties()
+		String _port = PropertyConfigLoader.getInstance().getProperties()
 				.getProperty("elasticsearch.port");
 		if (Util.validate("elasticsearch.port", _port)) {
 			this.port=Integer.parseInt(_port);
 		}
 
-		String _index = PropertyConfigFactory.getInstance().getProperties()
+		String _index = PropertyConfigLoader.getInstance().getProperties()
 				.getProperty("elasticsearch.index");
 		if (Util.validate("elasticsearch.index", _index)) {
 			this.index=_index;
 		}
 
-		String _type = PropertyConfigFactory.getInstance().getProperties()
+		String _type = PropertyConfigLoader.getInstance().getProperties()
 				.getProperty("elasticsearch.type");
 		if (Util.validate("elasticsearch.type", _type)) {
 			this.type=_type;
@@ -58,7 +62,7 @@ public final class EsMonitor {
 		Settings settings = ImmutableSettings
 				.settingsBuilder()
 				.put("cluster.name",
-						PropertyConfigFactory.getInstance().getProperties()
+						PropertyConfigLoader.getInstance().getProperties()
 								.getProperty("elasticsearch.cluster.name"))
 				.build();
 		client = new TransportClient(settings)

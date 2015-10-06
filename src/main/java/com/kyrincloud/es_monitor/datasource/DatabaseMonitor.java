@@ -12,9 +12,12 @@ import java.util.TimerTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.kyrincloud.es_monitor.Monitor;
+import com.kyrincloud.es_monitor.config.DataSourceConfig;
+import com.kyrincloud.es_monitor.config.HeartConfig;
 import com.kyrincloud.es_monitor.queue.DataCache;
 
-public final class DatabaseMonitor {
+public final class DatabaseMonitor implements Monitor{
 	
 	private static Logger logger=LoggerFactory.getLogger(DatabaseMonitor.class);
 	private String table_name;
@@ -22,19 +25,15 @@ public final class DatabaseMonitor {
 	private String sql;
 	private long delay;
 	private long period;
-	private int pageSize=1;
+	private int pageSize=100;
 
-	public DatabaseMonitor(String table_name, String table_key,long delay,long period) {
-		this.table_name = table_name;
-		this.table_key = table_key;
-		this.delay=delay;
-		this.period=period;
+	public DatabaseMonitor(DataSourceConfig config,HeartConfig heart) {
+		this.table_name = config.get_table();
+		this.table_key =config.get_tableKey();
+		this.delay=1000;
+		this.period=heart.get_heartRate()*60*1000;
 	}
 	
-	public DatabaseMonitor(String table_name, String table_key) {
-		this(table_name,table_key,1000,1000*30);
-	}
-
 	private List<String> executor(int pageIndex, int pageSize) {
 		sql = "select " + table_key + " from " + table_name + "  limit " + pageSize + " offset " + (pageIndex - 1)
 				* pageSize;
@@ -94,7 +93,7 @@ public final class DatabaseMonitor {
 				for (; allPage > 0; allPage--) {
 					List<String> list = executor(++pageIndex, pageSize);
 					for (String str : list) {
-						DataCache.add(str);
+						DataCache.put(str);
 					}
 				}
 				logger.info("[数据库查询任务结束，共查询：{}条,连接池数量：{}]",total,DataSourcePool.getInstance().size());

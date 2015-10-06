@@ -4,8 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import com.kyrincloud.es_monitor.config.PropertyConfigFactory;
-import com.kyrincloud.es_monitor.util.Util;
+import com.kyrincloud.es_monitor.config.DataSourceConfig;
 
 /**
  * 数据源实例
@@ -14,26 +13,14 @@ import com.kyrincloud.es_monitor.util.Util;
  *
  */
 public class PgDataSource {
-	private static  String url;
-	private static  String username ;
-	private static  String password ;
+	private  String url;
+	private  String username ;
+	private  String password ;
 
-	@SuppressWarnings("static-access")
-	public PgDataSource() {
-		 String _url = PropertyConfigFactory.getInstance().getProperties().getProperty("pg.datasource");
-		 if(Util.validate("pg.datasource", _url)){
-			 this.url=_url;
-		 }
-		 String _username = PropertyConfigFactory.getInstance().getProperties()
-				.getProperty("pg.username");
-		 if(Util.validate("pg.username", _username)){
-			 this.username=_username;
-		 }
-		 String _password = PropertyConfigFactory.getInstance().getProperties()
-				.getProperty("pg.password");
-		 if(Util.validate("pg.password", _password)){
-			 this.password=_password;
-		 }
+	public PgDataSource(DataSourceConfig config) {
+			 this.url=config.get_dataSource();
+			 this.username=config.get_username();
+			 this.password=config.get_password();
 	}
 
 	public synchronized Connection connection() {

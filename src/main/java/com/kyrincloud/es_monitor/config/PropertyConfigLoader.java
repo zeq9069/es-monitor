@@ -12,18 +12,23 @@ import java.util.Properties;
  * @date 2015年9月28日
  *
  */
-public class PropertyConfigFactory {
+public class PropertyConfigLoader {
 
 	private static Properties properties = new Properties();
 
-	private static final String PATH = System.getProperty("config");
+	private static final String PATH =System.getProperty("config");
 
-	public PropertyConfigFactory() {
+	public PropertyConfigLoader() {
 		FileInputStream config=null;
 		try {
 			if(PATH==null || PATH.isEmpty()){
-				throw new FileNotFoundException("缺少配置文件,请指定配置文件参数：-Dconfig=config.properties");
+				throw new FileNotFoundException("缺少配置文件,请指定配置文件参数：-Dconfig=<config.properties路径>");
 			}
+			if(!PATH.endsWith(".properties")){
+				throw new IllegalArgumentException("配置文件必须是properties类型");
+			}
+
+			
 			//如果是绝对路径
 			if (PATH.startsWith("/") || PATH.indexOf(":") > 0) {
 				config = new FileInputStream(new File(PATH));
@@ -31,25 +36,28 @@ public class PropertyConfigFactory {
 				config = new FileInputStream(new File(System.getProperty("user.dir")+"/"+PATH));
 			}
 			
-		} catch (FileNotFoundException e1) {
+		} catch (Exception e1) {
 			e1.printStackTrace();
+			System.exit(0);
 		}
+		
 		try {
 			if (config != null){
 				properties.load(config);
 			}else{
-				throw new IOException("找不到配置文件:config.properties");
+				throw new IOException("加载配置文件失败");
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
+			System.exit(0);
 		}
 	}
 
 	private static class Instance {
-		private static final PropertyConfigFactory factory = new PropertyConfigFactory();
+		private static final PropertyConfigLoader factory = new PropertyConfigLoader();
 	}
 
-	public static final PropertyConfigFactory getInstance() {
+	public static final PropertyConfigLoader getInstance() {
 		return Instance.factory;
 	}
 

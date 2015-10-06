@@ -6,8 +6,8 @@ import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.kyrincloud.es_monitor.config.PropertyConfigFactory;
-import com.kyrincloud.es_monitor.util.Util;
+import com.kyrincloud.es_monitor.config.DataSourceConfig;
+import com.kyrincloud.es_monitor.config.PropertiesConfig;
 
 public final class DataSourcePool {
 
@@ -18,18 +18,17 @@ public final class DataSourcePool {
 	private PgDataSource pds;
 
 	private AtomicInteger isUsed = new AtomicInteger(0);
+	
+	private static DataSourceConfig dataSource=new PropertiesConfig().getDataSource();
 
 	public DataSourcePool(PgDataSource pds) {
 		this.pds = pds;
-		String _max=PropertyConfigFactory.getInstance().getProperties().getProperty("pg.datasource.pools");
-		if(Util.validate("pg.datasource.pools", _max)){
-			this.max=Integer.parseInt(_max);
-		}
-		 pools= new ArrayBlockingQueue<Connection>(max);
+		this.max=dataSource.get_pools();
+		pools= new ArrayBlockingQueue<Connection>(max);
 	}
 
 	private static final class Instance {
-		private static final DataSourcePool p = new DataSourcePool(new PgDataSource());
+		private static final DataSourcePool p = new DataSourcePool(new PgDataSource(new PropertiesConfig().getDataSource()));
 	}
 
 	public static final DataSourcePool getInstance() {
