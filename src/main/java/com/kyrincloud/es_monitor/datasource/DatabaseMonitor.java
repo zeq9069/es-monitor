@@ -20,22 +20,30 @@ import com.kyrincloud.es_monitor.queue.DataCache;
 public final class DatabaseMonitor implements Monitor{
 	
 	private static Logger logger=LoggerFactory.getLogger(DatabaseMonitor.class);
-	private String table_name;
-	private String table_key;
 	private String sql;
 	private long delay;
-	private long period;
-	private int pageSize=100;
+	private int pageSize;
+	private DataSourceConfig config;
+	private HeartConfig heart;
 
 	public DatabaseMonitor(DataSourceConfig config,HeartConfig heart) {
-		this.table_name = config.get_table();
-		this.table_key =config.get_tableKey();
-		this.delay=1000;
-		this.period=heart.get_heartRate()*60*1000;
+		this(config,heart,1000);
 	}
 	
+	public DatabaseMonitor(DataSourceConfig config,HeartConfig heart,int delay) {
+		this(config,heart,1000,1000);
+	}
+	
+	public DatabaseMonitor(DataSourceConfig config,HeartConfig heart,int delay,int pageSize) {
+		this.config=config;
+		this.heart=heart;
+		this.delay=delay;
+		this.pageSize=pageSize;
+	}
+	
+	
 	private List<String> executor(int pageIndex, int pageSize) {
-		sql = "select " + table_key + " from " + table_name + "  limit " + pageSize + " offset " + (pageIndex - 1)
+		sql = "select " + config.get_tableKey() + " from " + config.get_table() + "  limit " + pageSize + " offset " + (pageIndex - 1)
 				* pageSize;
 		List<String> list = new ArrayList<String>();
 		Connection con = DataSourcePool.getInstance().getConnection();
@@ -44,7 +52,7 @@ public final class DatabaseMonitor implements Monitor{
 			ResultSet res = stmt.executeQuery(sql);
 			if (res != null) {
 				while (res.next()) {
-					String str = res.getString(table_key);
+					String str = res.getString(config.get_tableKey());
 					list.add(str);
 					System.out.println(str);
 				}
@@ -66,7 +74,7 @@ public final class DatabaseMonitor implements Monitor{
 		Connection con = DataSourcePool.getInstance().getConnection();
 		try {
 			Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-			ResultSet res = stmt.executeQuery("select count(*) from " + table_name);
+			ResultSet res = stmt.executeQuery("select count(*) from " + config.get_table());
 			res.next();
 			if (res != null && res.first()) {
 				num = res.getLong(1);
@@ -98,6 +106,6 @@ public final class DatabaseMonitor implements Monitor{
 				}
 				logger.info("[数据库查询任务结束，共查询：{}条,连接池数量：{}]",total,DataSourcePool.getInstance().size());
 			}
-		}, delay,period );
+		}, delay,heart.get_heartRate()*1000*60 );
 	}
 }

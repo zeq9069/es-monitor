@@ -11,8 +11,6 @@ import com.kyrincloud.es_monitor.config.PropertiesConfig;
 
 public final class DataSourcePool {
 
-	private  int max;
-
 	private Queue<Connection> pools;
 
 	private PgDataSource pds;
@@ -23,8 +21,7 @@ public final class DataSourcePool {
 
 	public DataSourcePool(PgDataSource pds) {
 		this.pds = pds;
-		this.max=dataSource.get_pools();
-		pools= new ArrayBlockingQueue<Connection>(max);
+		pools= new ArrayBlockingQueue<Connection>(dataSource.get_pools());
 	}
 
 	private static final class Instance {
@@ -36,7 +33,7 @@ public final class DataSourcePool {
 	}
 
 	protected Connection getConnection() {
-		if (!pools.isEmpty() && isUsed.get() + pools.size() >= max) {
+		if (!pools.isEmpty()) {
 			Connection con = pools.poll();
 			try {
 				if (con != null && !con.isClosed()) {
@@ -49,14 +46,14 @@ public final class DataSourcePool {
 				e.printStackTrace();
 			}
 			return getConnection();
-		} else {
+		} else{
 			isUsed.incrementAndGet();
 			return pds.connection();
 		}
 	}
 
 	protected void release(Connection con) {
-		if (pools.size() >= max) {
+		if (pools.size()+isUsed.get() >= dataSource.get_pools()) {
 			try {
 				con.close();
 			} catch (SQLException e) {

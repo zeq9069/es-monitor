@@ -62,23 +62,23 @@ public class PropertiesConfig {
 	private ElasticsearchConfig loadElasticsearch(Properties properties){
 		ElasticsearchConfig esc=new ElasticsearchConfig();
 		
-		String server=properties.getProperty(PropertyName.DB_DATASOURCE_POOLS);
+		String server=properties.getProperty(PropertyName.ES_SERVER);
 		if(Util.validate(PropertyName.ES_SERVER, server)){
 			esc.set_server(server);
 		}
-		String port=properties.getProperty(PropertyName.DB_DATASOURCE_POOLS);
+		String port=properties.getProperty(PropertyName.ES_PORT);
 		if(Util.validate(PropertyName.ES_PORT, port)){
 			esc.set_port(Integer.parseInt(port));
 		}
-		String clusterName=properties.getProperty(PropertyName.DB_DATASOURCE_POOLS);
+		String clusterName=properties.getProperty(PropertyName.ES_CLUSTER_NAME);
 		if(Util.validate(PropertyName.ES_CLUSTER_NAME, clusterName)){
 			esc.set_clusterName(clusterName);
 		}
-		String index=properties.getProperty(PropertyName.DB_DATASOURCE_POOLS);
+		String index=properties.getProperty(PropertyName.ES_INDEX);
 		if(Util.validate(PropertyName.ES_INDEX, index)){
 			esc.set_index(index);
 		}
-		String type=properties.getProperty(PropertyName.DB_DATASOURCE_POOLS);
+		String type=properties.getProperty(PropertyName.ES_TYPE);
 		if(Util.validate(PropertyName.ES_TYPE, type)){
 			esc.set_type(type);
 		}

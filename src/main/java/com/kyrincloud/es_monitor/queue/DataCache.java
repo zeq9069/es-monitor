@@ -16,7 +16,6 @@ public class DataCache {
 
 	private static BlockingQueue<String> data = new ArrayBlockingQueue<String>(1000);
 	private static List<String> notExist=new ArrayList<String>();//存放数据库中不存在es服务中的id
-	private boolean isExport=false;
 	
 	public static String take(){
 		String value=null;
@@ -84,10 +83,4 @@ public class DataCache {
 		notExist.clear();
 	}
 	
-	public   void setIsExport(boolean isExport){
-		this.isExport=isExport;
-	}
-	public  boolean isExport(){
-		return isExport;
-	}
 }

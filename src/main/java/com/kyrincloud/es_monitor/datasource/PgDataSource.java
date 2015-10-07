@@ -13,21 +13,18 @@ import com.kyrincloud.es_monitor.config.DataSourceConfig;
  *
  */
 public class PgDataSource {
-	private  String url;
-	private  String username ;
-	private  String password ;
+	
+	private DataSourceConfig config;
 
 	public PgDataSource(DataSourceConfig config) {
-			 this.url=config.get_dataSource();
-			 this.username=config.get_username();
-			 this.password=config.get_password();
+			 this.config=config;
 	}
 
 	public synchronized Connection connection() {
 		Connection con = null;
 		try {
 			Class.forName("org.postgresql.Driver");
-			con = DriverManager.getConnection(url, username, password);
+			con = DriverManager.getConnection(config.get_dataSource(), config.get_username(), config.get_password());
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
