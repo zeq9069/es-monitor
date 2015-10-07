@@ -12,7 +12,8 @@
 
 ##配置文件说明
 
-elasticsearch.server=127.0.0.1
+<pre>
+elasticsearch.server=127.0.0.1 
 elasticsearch.port=9300
 elasticsearch.cluster.name=www.ncss.cn
 elasticsearch.index=ncss-job
@@ -26,3 +27,4 @@ pg.table.key=job_id
 pg.datasource.pools=10
 
 heart.rate=1
+</pre>
