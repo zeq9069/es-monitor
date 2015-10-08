@@ -16,35 +16,34 @@ public class PropertyConfigLoader {
 
 	private static Properties properties = new Properties();
 
-	private static final String PATH =System.getProperty("config");
+	private static final String PATH = "C:\\Users\\lenovo\\Desktop\\config.properties";//System.getProperty("config");
 
 	public PropertyConfigLoader() {
-		FileInputStream config=null;
+		FileInputStream config = null;
 		try {
-			if(PATH==null || PATH.isEmpty()){
+			if (PATH == null || PATH.isEmpty()) {
 				throw new FileNotFoundException("缺少配置文件,请指定配置文件参数：-Dconfig=<config.properties路径>");
 			}
-			if(!PATH.endsWith(".properties")){
+			if (!PATH.endsWith(".properties")) {
 				throw new IllegalArgumentException("配置文件必须是properties类型");
 			}
 
-			
 			//如果是绝对路径
 			if (PATH.startsWith("/") || PATH.indexOf(":") > 0) {
 				config = new FileInputStream(new File(PATH));
-			}else{
-				config = new FileInputStream(new File(System.getProperty("user.dir")+"/"+PATH));
+			} else {
+				config = new FileInputStream(new File(System.getProperty("user.dir") + "/" + PATH));
 			}
-			
+
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			System.exit(0);
 		}
-		
+
 		try {
-			if (config != null){
+			if (config != null) {
 				properties.load(config);
-			}else{
+			} else {
 				throw new IOException("加载配置文件失败");
 			}
 		} catch (IOException e) {

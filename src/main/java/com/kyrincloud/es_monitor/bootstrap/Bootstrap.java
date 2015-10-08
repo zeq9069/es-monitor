@@ -14,14 +14,14 @@ import com.kyrincloud.es_monitor.server.MonitorServer;
  * @date 2015年9月28日
  */
 public class Bootstrap {
-	
-	private static Logger logger=LoggerFactory.getLogger(Bootstrap.class);
+
+	private static Logger logger = LoggerFactory.getLogger(Bootstrap.class);
 
 	public static void main(String[] args) {
 		logger.info("服务启动……");
-		PropertiesConfig config=new PropertiesConfig();
-		DatabaseMonitor databaseMonitor = new DatabaseMonitor(config.getDataSource(),config.getHeart());
-		EsMonitor esMonitor = new EsMonitor(config.getElasticsearch());
+		PropertiesConfig config = new PropertiesConfig();
+		DatabaseMonitor databaseMonitor = new DatabaseMonitor(config.getDataSource(), config.getHeart());
+		EsMonitor esMonitor = new EsMonitor(config.getElasticsearch(), config.getHeart());
 		MonitorServer monitor = new MonitorServer(databaseMonitor, esMonitor);
 		monitor.start();
 		logger.info("服务启动完毕");

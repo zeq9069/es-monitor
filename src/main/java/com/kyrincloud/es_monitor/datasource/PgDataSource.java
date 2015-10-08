@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.kyrincloud.es_monitor.config.DataSourceConfig;
 
 /**
@@ -13,11 +16,13 @@ import com.kyrincloud.es_monitor.config.DataSourceConfig;
  *
  */
 public class PgDataSource {
-	
+
+	Logger logger = LoggerFactory.getLogger(PgDataSource.class);
+
 	private DataSourceConfig config;
 
 	public PgDataSource(DataSourceConfig config) {
-			 this.config=config;
+		this.config = config;
 	}
 
 	public synchronized Connection connection() {
@@ -26,9 +31,13 @@ public class PgDataSource {
 			Class.forName("org.postgresql.Driver");
 			con = DriverManager.getConnection(config.get_dataSource(), config.get_username(), config.get_password());
 		} catch (ClassNotFoundException e) {
+			logger.error("数据库加载驱动失败:{}", e.getMessage());
 			e.printStackTrace();
+			System.exit(0);
 		} catch (SQLException e) {
+			logger.error("获取数据库连接失败:{}", e.getMessage());
 			e.printStackTrace();
+			System.exit(0);
 		}
 		return con;
 	}
