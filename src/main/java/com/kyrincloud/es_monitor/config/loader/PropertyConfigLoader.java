@@ -1,4 +1,4 @@
-package com.kyrincloud.es_monitor.config;
+package com.kyrincloud.es_monitor.config.loader;
 
 import java.io.File;
 import java.io.FileInputStream;

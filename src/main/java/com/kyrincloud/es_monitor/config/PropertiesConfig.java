@@ -2,6 +2,7 @@ package com.kyrincloud.es_monitor.config;
 
 import java.util.Properties;
 
+import com.kyrincloud.es_monitor.config.loader.PropertyConfigLoader;
 import com.kyrincloud.es_monitor.util.Util;
 
 public class PropertiesConfig {
