@@ -16,7 +16,7 @@ public class PropertyConfigLoader {
 
 	private static Properties properties = new Properties();
 
-	private static final String PATH = "C:\\Users\\lenovo\\Desktop\\config.properties";//System.getProperty("config");
+	private static final String PATH = System.getProperty("config");
 
 	public PropertyConfigLoader() {
 		FileInputStream config = null;
