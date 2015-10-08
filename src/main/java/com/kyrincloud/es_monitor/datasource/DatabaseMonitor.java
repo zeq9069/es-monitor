@@ -17,34 +17,38 @@ import com.kyrincloud.es_monitor.config.DataSourceConfig;
 import com.kyrincloud.es_monitor.config.HeartConfig;
 import com.kyrincloud.es_monitor.queue.DataCache;
 
-public final class DatabaseMonitor implements Monitor{
-	
-	private static Logger logger=LoggerFactory.getLogger(DatabaseMonitor.class);
+/**
+ * 数据库服务
+ * @author kyrin
+ *
+ */
+public final class DatabaseMonitor implements Monitor {
+
+	private static Logger logger = LoggerFactory.getLogger(DatabaseMonitor.class);
 	private String sql;
-	private long delay;
+	private long delay;//延迟
 	private int pageSize;
 	private DataSourceConfig config;
 	private HeartConfig heart;
 
-	public DatabaseMonitor(DataSourceConfig config,HeartConfig heart) {
-		this(config,heart,1000);
+	public DatabaseMonitor(DataSourceConfig config, HeartConfig heart) {
+		this(config, heart, 1000);
 	}
-	
-	public DatabaseMonitor(DataSourceConfig config,HeartConfig heart,int delay) {
-		this(config,heart,1000,1000);
+
+	public DatabaseMonitor(DataSourceConfig config, HeartConfig heart, int delay) {
+		this(config, heart, 1000, 1000);
 	}
-	
-	public DatabaseMonitor(DataSourceConfig config,HeartConfig heart,int delay,int pageSize) {
-		this.config=config;
-		this.heart=heart;
-		this.delay=delay;
-		this.pageSize=pageSize;
+
+	public DatabaseMonitor(DataSourceConfig config, HeartConfig heart, int delay, int pageSize) {
+		this.config = config;
+		this.heart = heart;
+		this.delay = delay;
+		this.pageSize = pageSize;
 	}
-	
-	
+
 	private List<String> executor(int pageIndex, int pageSize) {
-		sql = "select " + config.get_tableKey() + " from " + config.get_table() + "  limit " + pageSize + " offset " + (pageIndex - 1)
-				* pageSize;
+		sql = "select " + config.get_tableKey() + " from " + config.get_table() + "  limit " + pageSize + " offset "
+				+ (pageIndex - 1) * pageSize;
 		List<String> list = new ArrayList<String>();
 		Connection con = DataSourcePool.getInstance().getConnection();
 		try {
@@ -60,7 +64,7 @@ public final class DatabaseMonitor implements Monitor{
 			stmt.close();
 			res.close();
 		} catch (SQLException e) {
-			logger.error("查询数据库时，出现异常：{}",e.getMessage());
+			logger.error("查询数据库时，出现异常：{}", e.getMessage());
 			e.printStackTrace();
 		} finally {
 			logger.info("结束查询，释放数据库连接");
@@ -104,8 +108,8 @@ public final class DatabaseMonitor implements Monitor{
 						DataCache.put(str);
 					}
 				}
-				logger.info("[数据库查询任务结束，共查询：{}条,连接池数量：{}]",total,DataSourcePool.getInstance().size());
+				logger.info("[数据库查询任务结束，共查询：{}条,连接池数量：{}]", total, DataSourcePool.getInstance().size());
 			}
-		}, delay,heart.get_heartRate()*1000*60 );
+		}, delay, heart.get_heartRate() * 1000 * 60);
 	}
 }

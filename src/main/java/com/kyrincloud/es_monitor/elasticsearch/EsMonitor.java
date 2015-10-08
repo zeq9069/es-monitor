@@ -20,7 +20,7 @@ import com.kyrincloud.es_monitor.config.HeartConfig;
 import com.kyrincloud.es_monitor.queue.DataCache;
 
 /**
- * 
+ * es服务任务
  * @author kyrin 
  * @date 2015年9月30日
  */

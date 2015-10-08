@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 /**
- * 配置参数
+ * 配置文件加载类
  * @author kyrin
  * @date 2015年9月28日
  *

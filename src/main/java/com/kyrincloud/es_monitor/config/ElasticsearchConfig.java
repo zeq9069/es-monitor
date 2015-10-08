@@ -1,22 +1,28 @@
 package com.kyrincloud.es_monitor.config;
 
+/**
+ * es服务配置项
+ * @author kyrin
+ * @date 2015年10月7日
+ *
+ */
 public class ElasticsearchConfig {
-	
-	private  String _server;
-	private  int _port;
-	private  String  _clusterName;
-	private  String _index;
-	private  String _type;
-	
+
+	private String _server;//es服务ip地址
+	private int _port;//es服务端口
+	private String _clusterName;//es集群名称
+	private String _index;//es服务索引
+	private String _type;//es索引类型
+
 	public ElasticsearchConfig() {
 	}
-	
-	public ElasticsearchConfig(String server,int port,String clusterName,String index,String type) {
-		this._server=server;
-		this._port=port;
-		this._clusterName=clusterName;
-		this._index=index;
-		this._type=type;
+
+	public ElasticsearchConfig(String server, int port, String clusterName, String index, String type) {
+		this._server = server;
+		this._port = port;
+		this._clusterName = clusterName;
+		this._index = index;
+		this._type = type;
 	}
 
 	public String get_server() {
@@ -58,7 +64,5 @@ public class ElasticsearchConfig {
 	public void set_type(String _type) {
 		this._type = _type;
 	}
-	
-	
-	
+
 }

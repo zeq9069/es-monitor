@@ -1,7 +1,11 @@
 package com.kyrincloud.es_monitor;
 
-public interface  Monitor {
-	
-	public  void start();
+/**
+ * 监控接口
+ * @author kyrin
+ */
+public interface Monitor {
+
+	public void start();
 
 }

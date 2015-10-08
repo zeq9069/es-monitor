@@ -1,27 +1,33 @@
 package com.kyrincloud.es_monitor.config;
 
-
+/**
+ * 数据源配置项
+ * @author kyrin
+ * @date 2015年10月7日
+ *
+ */
 public class DataSourceConfig {
-	
-	private  String _dataSource;
-	private  String _username;
-	private  String _password;
-	private  String _table;
-	private  String _tableKey;
-	private  int _pools;
-	
+
+	private String _dataSource; //数据源url
+	private String _username;//用户名
+	private String _password;//密码
+	private String _table;//表名称
+	private String _tableKey;//表的primary key
+	private int _pools;//连接池最大数
+
 	public DataSourceConfig() {
 	}
-	
-	public DataSourceConfig(String dataSource,String username,String password,String tableName,String tableKey,int pools) {
-		 this._dataSource=dataSource;
-		 this._username=username;
-		 this._password=password;
-		 this._table=tableName;
-		 this._tableKey=tableKey;
-		 this._pools=pools;
+
+	public DataSourceConfig(String dataSource, String username, String password, String tableName, String tableKey,
+			int pools) {
+		this._dataSource = dataSource;
+		this._username = username;
+		this._password = password;
+		this._table = tableName;
+		this._tableKey = tableKey;
+		this._pools = pools;
 	}
-	
+
 	public String get_dataSource() {
 		return _dataSource;
 	}
@@ -69,5 +75,5 @@ public class DataSourceConfig {
 	public void set_pools(int _pools) {
 		this._pools = _pools;
 	}
-	
+
 }

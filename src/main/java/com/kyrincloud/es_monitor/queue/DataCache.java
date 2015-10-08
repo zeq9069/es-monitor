@@ -15,26 +15,26 @@ import java.util.concurrent.BlockingQueue;
 public class DataCache {
 
 	private static BlockingQueue<String> data = new ArrayBlockingQueue<String>(1000);
-	private static List<String> notExist=new ArrayList<String>();//存放数据库中不存在es服务中的id
-	
-	public static String take(){
-		String value=null;
+	private static List<String> notExist = new ArrayList<String>();//存放数据库中不存在es服务中的id
+
+	public static String take() {
+		String value = null;
 		try {
-			value= data.take();
+			value = data.take();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		return value;
 	}
-	
-	public static void put(String e){
+
+	public static void put(String e) {
 		try {
 			data.put(e);
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
 		}
 	}
-	
+
 	public static String poll() {
 		return data.poll();
 	}
@@ -54,12 +54,12 @@ public class DataCache {
 	public static boolean remove(Object obj) {
 		return data.remove(obj);
 	}
-	
+
 	public static boolean nAdd(String e) {
 		return notExist.add(e);
 	}
-	
-	public static String get(int index){
+
+	public static String get(int index) {
 		return notExist.get(index);
 	}
 
@@ -74,13 +74,13 @@ public class DataCache {
 	public static boolean nRemove(Object obj) {
 		return notExist.remove(obj);
 	}
-	
-	public static Iterator<String> nIterator(){
+
+	public static Iterator<String> nIterator() {
 		return notExist.iterator();
 	}
-	
+
 	public static void nClear() {
 		notExist.clear();
 	}
-	
+
 }
